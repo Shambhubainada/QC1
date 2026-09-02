@@ -62,7 +62,7 @@
   <section class="details-grid">
     <div class="detail redpanel">
       <h2>🐞 &nbsp; INFESTED / UNDER COVER DETAILS</h2>
-      <div class="tablewrap"><table><thead><tr><th>Stack No.</th><th>Commodity</th><th>Fumigation Date</th><th>Days</th></tr></thead><tbody id="attentionBody"></tbody></table></div>
+      <div class="tablewrap"><table><thead><tr><th>Stack No.</th><th>Commodity</th><th>Type</th><th>Fumigation Date</th><th>Days</th></tr></thead><tbody id="attentionBody"></tbody></table></div>
       <footer>Total Infested / Under Cover : <b id="attentionTotal">0</b></footer>
     </div>
 
@@ -180,9 +180,9 @@ function render(){
   document.getElementById("attentionTotal").textContent=under.length;
   document.getElementById("dueTotal").textContent=due.length;
 
-  document.getElementById("attentionBody").innerHTML=under.length?
-    under.map(x=>rowHTML(x,[x.stack,x.comm,x.fum, x.fum?days(x.fum):""])).join(""):
-    `<tr><td colspan="4">No stacks found</td></tr>`;
+  document.getElementById("attentionBody").innerHTML=att.length?
+    att.map(x=>rowHTML(x,[x.stack,x.comm,x.inf?"INFESTED":"UNDER COVER",x.fum, x.fum?days(x.fum):""])).join(""):
+    `<tr><td colspan="5">No stacks found</td></tr>`;
 
   document.getElementById("dueBody").innerHTML=due.length?
     due.slice().sort((a,b)=>b.days-a.days).map(x=>rowHTML(x,[x.shed,x.stack,x.comm,x.last,x.days,"DUE (>30 DAYS)"])).join(""):
@@ -209,9 +209,6 @@ function render(){
     </div>`;
 
   ops.innerHTML=
-    table("⚠ FUMIGATION DUE — LAST FUMIGATION >30 DAYS",
-      ["Shed","Stack No.","Commodity","Last Fumigation","Days","Status"],
-      due.slice().sort((a,b)=>b.days-a.days).map(x=>rowHTML(x,[x.shed,x.stack,x.comm,x.last,x.days,"DUE (>30 DAYS)"])),"orangepanel")+
     table("🟢 CURRENTLY UNDER COVER",
       ["Shed","Stack No.","Commodity","Fumigation Date","Days Under Cover","Degassing"],
       under.slice().sort((a,b)=>(days(b.fum)||0)-(days(a.fum)||0)).map(x=>rowHTML(x,[x.shed,x.stack,x.comm,x.fum,x.fum?days(x.fum):"",x.degas||"PENDING"])),"redpanel")+
